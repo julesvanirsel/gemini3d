@@ -372,6 +372,7 @@ subroutine impact_ionization(cfg,t,dt,x,ymd,UTsec,f107a,f107,Prprecip,Qeprecip,W
   lprec=size(W0,3)    ! just recompute the number of precipitating populations
   if (gridflag/=0) then
     if (cfg%flagglow==0) then
+      Prprecip=0.0; Qeprecip=0.0;            
       !! Fang et al 2008/2010 parameterization
       do iprec=1,lprec
         !! loop over the different populations of precipitation (2 here?), accumulating production rates
