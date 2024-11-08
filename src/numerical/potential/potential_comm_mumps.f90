@@ -25,6 +25,7 @@ use PDEelliptic, only: elliptic_workers
 use mpimod, only: mpi_cfg, tag=>gemini_mpi, &
 bcast_send, bcast_recv, gather_recv, gather_send, halo, bcast_send3D_ghost, bcast_recv3D_ghost
 use gemini3d_config, only: gemini_cfg
+use gemini_work_def, only: gemini_work
 
 use mpi_f08, only: mpi_send, mpi_recv, mpi_integer, mpi_comm_world, mpi_status_ignore
 
@@ -109,7 +110,7 @@ contains
   subroutine electrodynamics_curv(it,t,dt,nn,vn2,vn3,Tn,cfg,ns,Ts,vs1,B1,vs2,vs3,x,efield, &
                            E1,E2,E3,J1,J2,J3,Phiall,flagdirich,Vminx1,Vmaxx1,Vminx2,Vmaxx2,Vminx3,Vmaxx3, &
                            Vminx1slab,Vmaxx1slab,E01,E02,E03, &
-                           ymd,UTsec)
+                           ymd,UTsec,intvars)
     !! THIS IS A WRAPPER FUNCTION FOR THE ELECTRODYANMICS
     !! PART OF THE MODEL.  BOTH THE ROOT AND WORKER PROCESSES
     !! CALL THIS SAME SUBROUTINE, WHEN THEN BRANCHES INTO
@@ -141,15 +142,19 @@ contains
     !! inout since it may not be allocated or deallocated in this procedure
     integer, dimension(3), intent(in) :: ymd
     real(wp), intent(in) :: UTsec
-    real(wp), dimension(1:lx1,1:lx2,1:lx3) :: sig0,sigP,sigH,sigPgrav,sigHgrav
+    type(gemini_work), intent(inout) :: intvars
+    real(wp), dimension(1:lx1,1:lx2,1:lx3) :: sig0,sigPgrav,sigHgrav
     real(wp), dimension(1:lx1,1:lx2,1:lx3,1:lsp) :: muP,muH,nusn
     real(wp), dimension(1:lx1,1:lx2,1:lx3) :: incap
+    real(wp), dimension(:,:,:), pointer :: sigP,sigH
     real(wp) :: tstart,tfin
     real(wp) :: minh1,maxh1,minh2,maxh2,minh3,maxh3
     ! background variables and boundary conditions, full grid sized variables
 
     ! slab-sized background variables
     real(wp), dimension(1:lx1,1:lx2,1:lx3) :: E02src,E03src
+
+    sigP=>intvars%sigP; sigH=>intvars%sigH
 
     !> update conductivities and mobilities
     call cpu_time(tstart)
