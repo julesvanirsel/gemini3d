@@ -56,7 +56,7 @@ real(wp), parameter :: P(8,4) = reshape( &
   4.66259e4_wp,	1.29068e4_wp,	3.54600e3_wp,	8.60021e2_wp, &
   1.84025e2_wp,	3.47254e1_wp,	5.77661e0_wp,	7.51004e-1_wp]
  
-if (E0_keV < 0.1_wp .or. E0_keV > 1000) then
+if (E0_keV < 0.099_wp .or. E0_keV > 1000) then
   write(E0_str,'(F12.4)') E0_keV
   error stop 'ionize_fang:fang2010_spectrum: valid E0 range from 100 eV .. 1 MeV: E0 (keV) : ' // E0_str
 endif
@@ -165,7 +165,7 @@ real(wp), parameter :: P(8,4) = reshape( &
 -6.45454e-1_wp,  8.49555e-4_wp, -4.28581e-2_wp, -2.99302e-3_wp, &
  9.48930e-1_wp,  1.97385e-1_wp, -2.50660e-3_wp, -2.06938e-3_wp], shape(P), order=[2,1])
 
-if (Emono_keV < 0.1_wp .or. Emono_keV > 1000) then
+if (Emono_keV < 0.099_wp .or. Emono_keV > 1000) then
   write(E0_str,'(F12.4)') Emono_keV
   error stop 'ionize_fang:fang2010: valid E0 range from 100 eV .. 1 MeV: E0 (keV) : ' // E0_str
 endif
@@ -231,7 +231,7 @@ real(wp), parameter :: P(8,4) = reshape( &
  1.90953_wp,    -4.74704e-2_wp, -1.80200e-1_wp,  2.46652e-2_wp, &
 -1.29566_wp,    -2.10952e-1_wp,  2.73106e-1_wp, -2.92752e-2_wp], shape(P), order=[2,1])
 
-if (E0_keV < 0.1_wp .or. E0_keV > 1000) then
+if (E0_keV < 0.099_wp .or. E0_keV > 1000) then
   write(E0_str,'(F12.4)') E0_keV
   error stop 'ionize_fang:fang2008: valid E0 range from 100 eV .. 1 MeV: E0 (keV) : ' // E0_str
 endif
