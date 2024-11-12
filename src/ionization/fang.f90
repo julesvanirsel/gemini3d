@@ -68,12 +68,13 @@ H_cm = 100 * kb * Tn / (meanmass_g/1000) / abs(g_ms2)
 qtot = 0
 do k=1,lbins
   !! energy bin limits
-  bin_lb = -1 ! lower limit from Fang 2008, 2010
+  bin_lb = -1.0_wp ! lower limit from Fang 2008, 2010
   select case (diff_num_flux)
   case (0) ! Maxwellian
     bin_ub = log10(20*E0_keV) ! gives 1.12e-7 x max(phi)
   case (3) ! accelerated Maxwellian
-    bin_ub = log10(20*E0_keV)
+    bin_lb = log10(E0_keV) ! minimum energy of spectrum
+    bin_ub = log10(10*max(E0_keV, E0_char_keV))
   case (4) ! Evans, D. S. (1974) 2 keV acc., 0.8 keV temp
     bin_ub = log10(10*2.0_wp)
   case default
@@ -81,12 +82,12 @@ do k=1,lbins
   end select
 
   !! log bins, midpoint rule
-  Ebin_keV =  (10**(bin_lb+(bin_ub-bin_lb)*(k)/(lbins-1)) + 10**(bin_lb+(bin_ub-bin_lb)*(k-1)/(lbins-1)))/2 
+  Ebin_keV =  (10**(bin_lb+(bin_ub-bin_lb)*(k)/(lbins-1)) + 10**(bin_lb+(bin_ub-bin_lb)*(k-1)/(lbins-1)))/2.0_wp
   dEbin_keV = (10**(bin_lb+(bin_ub-bin_lb)*(k)/(lbins-1)) - 10**(bin_lb+(bin_ub-bin_lb)*(k-1)/(lbins-1)))
 
   !! normalized atmospheric column mass
   !! Equation (1)
-  y = 2/Ebin_keV * (massden_gcm3 * H_cm / 6e-6_wp)**0.7_wp
+  y = 2.0_wp / Ebin_keV * (massden_gcm3 * H_cm / 6e-6_wp)**0.7_wp
 
   !! Equation (5)
   C = 0
